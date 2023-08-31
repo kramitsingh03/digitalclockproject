@@ -1,0 +1,188 @@
+<!-- 
+Online HTML, CSS and JavaScript editor to run code online.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Browser - kr.amit singh</title>
+  <script src="https://kit.fontawesome.com/a699bcecaa.js" crossorigin="anonymous"></script>
+  <Style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100vh;
+      background: url(https://source.unsplash.com/random) center no-repeat;
+      background-size: cover;
+      padding: 0;
+
+
+    }
+
+    input {
+      padding: 1rem;
+      font-size: 1.2em;
+      border: 1px solid black;
+      border-radius: 30px;
+      width: 90%;
+    }
+
+    .search-engine {
+      width: max-content;
+      height: max-content;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 1rem;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+    }
+
+    .button {
+      margin: 2rem;
+    }
+
+    button {
+      color: rgb(255, 255, 255);
+      padding: 0.8rem;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      width: 100%;
+      cursor: pointer;
+      opacity: 0.6;
+      font-size: 1.2em;
+      font-weight: 700;
+      background-color: rgb(48, 56, 48);
+      margin: 10px;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      opacity: 1;
+      background-color: grey;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 8vh;
+      text-align: center;
+      color: white;
+      backdrop-filter: invert(80%);
+      padding: 0.5rem;
+      backdrop-filter: blur(6px);
+    }
+
+    img {
+      position: relative;
+      top: 15px;
+      left: 0.1%;
+    }
+
+    .btn-image {
+
+      width: max-content;
+      height: max-content;
+      font-size: 0.6em;
+      position: absolute;
+      right: 10px;
+      bottom: 10vh;
+    }
+
+    span {
+      cursor: pointer;
+      opacity: 0.6;
+    }
+
+    span:hover {
+      opacity: 1;
+    }
+  </Style>
+  <link rel="shortcut icon" href="https://cdn.pixabay.com/photo/2017/07/07/02/06/symbol-2480168_1280.png"
+    type="image/x-icon">
+</head>
+
+<body>
+  <div class="body">
+
+    <div class="search-engine">
+
+      <div class="search">
+        <img src="https://cdn.pixabay.com/photo/2017/07/07/02/06/symbol-2480168_1280.png" alt="" height="50px"
+          width="50px">
+        <input type="text" name="q" id="search" placeholder="Search here" required>
+      </div>
+
+      <div class="button"><button type="submit" onclick="goggle();">goggle</button>
+        <button type="submit" onclick="youtube();">youtube</button>
+        <button type="submit" onclick="bing();">Bing</button>
+        <button type="submit" onclick="yahoo();">Yahoo</button>
+        <button type="submit" onclick="facebook();">Facebook</button>
+      </div>
+
+    </div>
+  </div>
+  <div class="btn-image"><button onclick="randomimage();">Change image</button></div>
+  <footer>
+
+    <span><a href="https://www.youtube.com/@kramitsingh"><i class="fa-brands fa-youtube fa-xl"
+          style="color: #ff0000;"></i></a></i></span>
+    &nbsp;
+    <span><a href="https://www.instagram.com/__kr.amitsingh__/"><i class="fa-brands fa-instagram fa-xl"
+          style="color: #ff00a2;"></i></a></i></span>
+    &nbsp
+    <span><a href="https://www.linkedin.com/in/amit-kumar-2b1736259/"><i class="fa-brands fa-linkedin fa-xl"
+          style="color: blue;"></i></a></i></span>
+    <div class="footer">Made By ❤️ kr.amit singh &nbsp; &nbsp; copyright @ 2023 </div>
+
+  </footer>
+
+
+  <script>
+
+    function goggle() {
+      let search = document.getElementById("search").value;
+      var googleurl = 'https://www.google.com/search?q=' + encodeURIComponent(search);
+      window.open(googleurl);
+    }
+    function youtube() {
+      let search = document.getElementById("search").value;
+      let youtubeurl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(search);
+      window.open(youtubeurl);
+    }
+    function bing() {
+      let search = document.getElementById("search").value;
+      let bingurl = "https://www.bing.com/search?q=" + encodeURIComponent(search);
+      window.open(bingurl);
+    }
+    function yahoo() {
+      let search = document.getElementById("search").value;
+      let yahoourl = "https://search.yahoo.com/search?p=" + encodeURIComponent(search);
+      window.open(yahoourl);
+    }
+    function facebook() {
+      let search = document.getElementById("search").value;
+      let facebookurl = "https://www.facebook.com/search/top/?q=" + encodeURIComponent(search);
+      window.open(facebookurl);
+    }
+    // api background image
+    function randomimage() {
+      window.location.reload();
+    }
+  </script>
+</body>
+
+</html>
