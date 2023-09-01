@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Food Ordering - Cart Items</title>
+  <style>
+    /* CSS styles here */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f1f1;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .cart-items {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-item-image {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+
+    .cart-item-info {
+      flex-grow: 1;
+    }
+
+    .cart-item-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .cart-item-quantity {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .quantity-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 5px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .quantity-btn:hover {
+      background-color: #45a049;
+    }
+
+    .quantity-input {
+      width: 40px;
+      text-align: center;
+      border: 1px solid #ccc;
+      padding: 2px;
+      font-size: 14px;
+      margin: 0 5px;
+    }
+
+    .cart-item-price {
+      color: #777;
+      margin-bottom: 5px;
+    }
+
+    .remove-btn {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 5px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .remove-btn:hover {
+      background-color: #d32f2f;
+    }
+
+    .coupon-code {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    #coupon-input {
+      flex-grow: 1;
+      padding: 5px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      margin-right: 10px;
+    }
+
+    .total-amount {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .checkout-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 20px;
+    }
+
+    .checkout-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Food Ordering - Cart Items</h1>
+
+    <ul id="cart-items" class="cart-items"></ul>
+
+    <div class="coupon-code">
+      <input type="text" id="coupon-input" placeholder="Coupon Code">
+      <button onclick="applyCoupon()">Apply Coupon</button>
+    </div>
+
+    <div class="total-amount">
+      Total: $<span id="total-amount">0</span>
+    </div>
+
+    <button class="checkout-btn" onclick="checkout()">Checkout</button>
+
+    <script>
+      function updateCart() {
+        var cartItemsElement = document.getElementById('cart-items');
+        cartItemsElement.innerHTML = ''; // Clear the cart items
+
+        // Retrieve cart data from local storage
+        var cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        for (var i = 0; i < cart.length; i++) {
+          var item = cart[i];
+
+          var li = document.createElement('li');
+          li.className = 'cart-item';
+
+          var itemImage = document.createElement('img');
+          itemImage.className = 'cart-item-image';
+          itemImage.src = item.imageSrc;
+          itemImage.alt = item.name;
+
+          var itemInfo = document.createElement('div');
+          itemInfo.className = 'cart-item-info';
+
+          var itemName = document.createElement('h2');
+          itemName.className = 'cart-item-name';
+          itemName.textContent = item.name;
+
+          var itemQuantity = document.createElement('div');
+          itemQuantity.className = 'cart-item-quantity';
+
+          var decreaseBtn = document.createElement('button');
+          decreaseBtn.textContent = '-';
+          decreaseBtn.className = 'quantity-btn';
+          decreaseBtn.setAttribute('data-index', i);
+          decreaseBtn.addEventListener('click', function() {
+            var index = parseInt(this.getAttribute('data-index'));
+            decreaseQuantity(index);
+          });
+
+          var quantityInput = document.createElement('input');
+          quantityInput.type = 'number';
+          quantityInput.value = item.quantity;
+          quantityInput.className = 'quantity-input';
+          quantityInput.setAttribute('data-index', i);
+          quantityInput.addEventListener('change', function() {
+            var index = parseInt(this.getAttribute('data-index'));
+            var newQuantity = parseInt(this.value);
+            if (newQuantity > 0) {
+              updateQuantity(index, newQuantity);
+            } else {
+              removeItem(index);
+            }
+          });
+
+          var increaseBtn = document.createElement('button');
+          increaseBtn.textContent = '+';
+          increaseBtn.className = 'quantity-btn';
+          increaseBtn.setAttribute('data-index', i);
+          increaseBtn.addEventListener('click', function() {
+            var index = parseInt(this.getAttribute('data-index'));
+            increaseQuantity(index);
+          });
+
+          var itemPrice = document.createElement('p');
+          itemPrice.className = 'cart-item-price';
+          itemPrice.textContent = '$' + (item.price * item.quantity).toFixed(2);
+
+          var removeBtn = document.createElement('button');
+          removeBtn.textContent = 'Remove';
+          removeBtn.className = 'remove-btn';
+          removeBtn.setAttribute('data-index', i);
+          removeBtn.addEventListener('click', function() {
+            var index = parseInt(this.getAttribute('data-index'));
+            removeItem(index);
+          });
+
+          itemQuantity.appendChild(decreaseBtn);
+          itemQuantity.appendChild(quantityInput);
+          itemQuantity.appendChild(increaseBtn);
+
+          itemInfo.appendChild(itemName);
+          itemInfo.appendChild(itemQuantity);
+          itemInfo.appendChild(itemPrice);
+          itemInfo.appendChild(removeBtn);
+
+          li.appendChild(itemImage);
+          li.appendChild(itemInfo);
+
+          cartItemsElement.appendChild(li);
+        }
+
+        updateTotal(); // Update the total amount
+      }
+
+      function updateQuantity(index, newQuantity) {
+        // Retrieve cart data from local storage
+        var cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        cart[index].quantity = newQuantity;
+
+        // Save the updated cart data to local storage
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        updateCart(); // Update the cart display
+      }
+
+      function removeItem(index) {
+        // Retrieve cart data from local storage
+        var cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        cart.splice(index, 1);
+
+        // Save the updated cart data to local storage
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        updateCart(); // Update the cart display
+      }
+
+      function increaseQuantity(index) {
+        // Retrieve cart data from local storage
+        var cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        cart[index].quantity++;
+
+        // Save the updated cart data to local storage
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        updateCart(); // Update the cart display
+      }
+
+      function decreaseQuantity(index) {
+        // Retrieve cart data from local storage
+        var cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        if (cart[index].quantity > 1) {
+          cart[index].quantity--;
+        } else {
+          cart.splice(index, 1);
+        }
+
+        // Save the updated cart data to local storage
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        updateCart(); // Update the cart display
+      }
+
+      function updateTotal() {
+        var totalAmountElement = document.getElementById('total-amount');
+        var total = 0;
+
+        // Retrieve cart data from local storage
+        var cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        for (var i = 0; i < cart.length; i++) {
+          total += cart[i].price * cart[i].quantity;
+        }
+
+        totalAmountElement.textContent = total.toFixed(2);
+      }
+
+      function applyCoupon() {
+        var couponInput = document.getElementById('coupon-input');
+        var couponCode = couponInput.value;
+
+        // Retrieve cart data from local storage
+        var cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Define your coupon codes and their associated discounts
+        var couponCodes = {
+          SUMMER15: 0.15, // 15% discount
+          FALL20: 0.20, // 20% discount
+          WINTER10: 0.10 // 10% discount
+        };
+
+        var discount = couponCodes[couponCode];
+
+        if (discount) {
+          var totalAmountElement = document.getElementById('total-amount');
+          var total = parseFloat(totalAmountElement.textContent);
+
+          // Apply the discount
+          total = total - (total * discount);
+
+          totalAmountElement.textContent = total.toFixed(2);
+
+          alert('Coupon applied successfully!');
+
+          // Clear the coupon input field
+          couponInput.value = '';
+        } else {
+          alert('Invalid coupon code. Please try again.');
+        }
+      }
+
+      function checkout() {
+        // Checkout logic here
+        // ...
+      }
+
+      updateCart(); // Update the cart display
+    </script>
+  </div>
+</body>
+</html>

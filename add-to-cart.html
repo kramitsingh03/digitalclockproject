@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Food Ordering - Add to Cart</title>
+  <style>
+    /* CSS styles here */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f1f1;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .product {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+
+    .product-details {
+      flex-grow: 1;
+    }
+
+    .product-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .product-price {
+      color: #777;
+      margin-bottom: 10px;
+    }
+
+    .add-to-cart-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .add-to-cart-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Food Ordering - Add to Cart</h1>
+
+    <div class="product">
+      <img class="product-image" src="product1.jpg" alt="Product 1">
+      <div class="product-details">
+        <h2 class="product-name">Product 1</h2>
+        <p class="product-price">Price: $10</p>
+        <button class="add-to-cart-btn" onclick="addToCart('Product 1', 10, 'product1.jpg')">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <img class="product-image" src="product2.jpg" alt="Product 2">
+      <div class="product-details">
+        <h2 class="product-name">Product 2</h2>
+        <p class="product-price">Price: $20</p>
+        <button class="add-to-cart-btn" onclick="addToCart('Product 2', 20, 'product2.jpg')">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <img class="product-image" src="product3.jpg" alt="Product 3">
+      <div class="product-details">
+        <h2 class="product-name">Product 3</h2>
+        <p class="product-price">Price: $30</p>
+        <button class="add-to-cart-btn" onclick="addToCart('Product 3', 30, 'product3.jpg')">Add to Cart</button>
+      </div>
+    </div>
+<a href="cart-items.html">cart</a>
+    <script>
+      function addToCart(productName, price, imageSrc) {
+        // Check if cart data exists in local storage
+        var cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Find existing item in the cart
+        var existingItem = cart.find(function(item) {
+          return item.name === productName;
+        });
+
+        if (existingItem) {
+          // If the item already exists, increase its quantity
+          existingItem.quantity++;
+        } else {
+          // Otherwise, add a new item to the cart
+          var newItem = {
+            name: productName,
+            price: price,
+            quantity: 1,
+            imageSrc: imageSrc
+          };
+          cart.push(newItem);
+        }
+
+        // Save the updated cart data to local storage
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        alert('Item added to cart: ' + productName);
+        console.log(cart);
+      }
+    </script>
+  </div>
+</body>
+</html>
